@@ -10,8 +10,11 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductListComponent implements OnInit {
 
+  currentCategory: string;
   products: Product[];
   currentCategoryId: number;
+  searchMode: boolean;
+
   constructor(private productService: ProductService,
           private route: ActivatedRoute) { }
 
@@ -22,23 +25,46 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts() {
-    //chek if "id" parameter is availabe
-    const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
+     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
-    if(hasCategoryId) {
-      //get the "id" param string. Convert string to number using "+"
-      this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
-    } else {
-      // set a default value
-      this.currentCategoryId = 1;
+     if(this.searchMode) {
+        this.handleSearchProducts();
+     } else {
+       this.handleListProducts();
+     }
+    
+  }
+    handleListProducts() {
+        //chek if "id" parameter is availabe
+        const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
+
+        if(hasCategoryId) {
+          //get the "id" param string. Convert string to number using "+"
+          this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
+          this.currentCategory = this.route.snapshot.paramMap.get('name');
+
+        } else {
+          // set a default value
+          this.currentCategoryId = 1;
+          this.currentCategory = 'Books'
+        }
+
+          // get the products for the given category id
+        this.productService.getProductList(this.currentCategoryId).subscribe(
+          data => {
+            this.products = data; // assign the returned data to local variable array
+          }
+        )
     }
 
-      // get the products for the given category id
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      data => {
-        this.products = data; // assign the returned data to local variable array
-      }
-    )
-  }
+    handleSearchProducts() {
+         const theKeyWord: string = this.route.snapshot.paramMap.get('keyword');
 
+         this.productService.searchProducts(theKeyWord).subscribe(
+            data => {
+                this.products = data;
+            }
+         )
+
+    }
 }
