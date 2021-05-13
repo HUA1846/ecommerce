@@ -15,35 +15,56 @@ export class ProductService {
 
   constructor(private httpClient: HttpClient) { }
 
+  // pagination
+  getProductListPaginate(thePage: number, thePageSize: number,
+      theCategoryId: number): Observable<GetResponseProducts> {
+      // build url based on category id, page, and size
+      const url = `${this.baseUrl}/search/findByCategoryId` +
+                  `?id=${theCategoryId}&page=${thePage}&size=${thePageSize}`;
+      return this.httpClient.get<GetResponseProducts>(url);
+  }
+
+  // product details
+  getProductDetails(productId: number): Observable<Product> {
+      const productUrl = `${this.baseUrl}/${productId}`;
+      return this.httpClient.get<Product>(productUrl);
+  }
+
   // invoked in product-list component by calling subscribe()
   getProductList(categoryId: number): Observable<Product[]> {
     // build url based on categroy id
-    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+      const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
 
-    return this.getProducts(searchUrl);
+      return this.getProducts(searchUrl);
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
 
-    return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
-      map(response => response._embedded.productCategory));
+      return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
+        map(response => response._embedded.productCategory));
   }
 
   searchProducts(keyword: string): Observable<Product[]> {
-    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${keyword}`;
-    return this.getProducts(searchUrl);
+      const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${keyword}`;
+      return this.getProducts(searchUrl);
   }
 
   private getProducts(searchUrl: string): Observable<Product[]> {
-    return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(
-      map(response => response._embedded.products));
+      return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(
+        map(response => response._embedded.products));
   }
 }
 
 interface GetResponseProducts {
   _embedded: {
     products: Product[]; // get an array of products
-  }
+  },
+  page: {
+    size: number,
+    totalElements: number,
+    totalPages: number,
+    number: number 
+ }
 }
 
 interface GetResponseProductCategory {

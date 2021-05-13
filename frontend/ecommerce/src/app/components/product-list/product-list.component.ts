@@ -10,10 +10,17 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductListComponent implements OnInit {
 
-  currentCategory: string;
-  products: Product[];
-  currentCategoryId: number;
-  searchMode: boolean;
+  currentCategory: string = "Books";
+  products: Product[] = [];
+  currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
+  searchMode: boolean = false;
+
+  // properties for pagination
+  thePageNumber: number = 1;
+	thePageSize: number = 10;
+  theTotalElements: number = 0;
+
 
   constructor(private productService: ProductService,
           private route: ActivatedRoute) { }
@@ -48,14 +55,35 @@ export class ProductListComponent implements OnInit {
           this.currentCategoryId = 1;
           this.currentCategory = 'Books'
         }
+        
+        /* Check if category has changed. 
+           Angular will reuse a component if it is currently being viewed
+        */
 
-          // get the products for the given category id
-        this.productService.getProductList(this.currentCategoryId).subscribe(
-          data => {
-            this.products = data; // assign the returned data to local variable array
-          }
-        )
+        /* If category id is different than the previos one, 
+           reset thePageNumber back to 1
+        */
+        if(this.previousCategoryId != this.currentCategoryId) {
+            this.thePageNumber = 1;
+        }
+
+        this.previousCategoryId = this.currentCategoryId;
+        console.log(`currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`);
+
+        this.productService.getProductListPaginate(this.thePageNumber - 1, 
+                                                   this.thePageSize, 
+                                                   this.currentCategoryId)
+                                                   .subscribe(this.processResult())
+        
+    
+        // get the products for the given category id
+        // this.productService.getProductList(this.currentCategoryId).subscribe(
+        //   data => {
+        //     this.products = data; // assign the returned data to local variable array
+        //   }
+        // )
     }
+    
 
     handleSearchProducts() {
          const theKeyWord: string = this.route.snapshot.paramMap.get('keyword');
@@ -65,6 +93,14 @@ export class ProductListComponent implements OnInit {
                 this.products = data;
             }
          )
+    }
 
+    processResult() {
+      return data => {
+        this.products = data._embedded.products;
+        this.thePageNumber = data.page.number + 1; // angular is one-based
+        this.thePageSize = data.page.size;
+        this.theTotalElements = data.page.totalElements;
+      }
     }
 }
