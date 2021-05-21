@@ -16,6 +16,27 @@ export class CartDetailsComponent implements OnInit {
     constructor(private cartService : CartService) { }
 
     ngOnInit(): void {
+      this.listCartDetails();
+    }
+
+    listCartDetails() {
+
+      // get the cart items from cartService
+      this.cartItems = this.cartService.cartItems;
+
+      // subscribe to the cart totalPrice
+      this.cartService.totalPrice.subscribe(
+          data => this.totalPrice = data
+      );
+
+      // subscribe to the cart totalQuantity
+      this.cartService.totalQuantity.subscribe(
+          data => this.totalQuantity = data
+      )
+
+      // compute total price and quantity
+      this.cartService.computeCartTotal();
+
     }
 
 }
