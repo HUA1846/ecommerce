@@ -9,6 +9,30 @@
                     <th width="30%"></th>
                 </tr>
 
+                <tr *ngFor="let item of cartItems">
+                    <td>
+                        <img src="{{item.imageUrl}}" class="img-responsive" width="150px"/>
+                    </td>
+                    <td>
+                        <p>{{item.name}}</p>
+                        <p>{{item.unitPrice | currency : 'USD'}}</p>
+                    </td>
+                    <td>
+                        <div class="items">
+                            <label>Quantity: </label> {{item.quantity}}
+                        </div>
+                        <p class="mt-2">Subtotal: {{item.quantity * item.unitPrice | currency : 'USD'}} </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2"></td>
+                    <td style="font-weight: bold">
+                        <p>Total Quantity: {{totalQuantity}} </p>
+                        <p>Shipping: {{1.99 | currency : 'USD'}}</p>
+                        <p>Total Price: {{totalPrice + 1.99 | currency : 'USD'}}</p>
+                    </td>
+                </tr>
             </table>
 
         </div>
