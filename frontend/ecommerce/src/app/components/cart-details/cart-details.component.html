@@ -24,7 +24,7 @@
                             <div class="row no-gutters">
                                 <!-- increment button -->
                                 <div class="col">
-                                    <button class="btn btn-primary btn-sm">
+                                    <button (click)="incrementQuantity(item)" class="btn btn-primary btn-sm">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
@@ -34,7 +34,7 @@
                                 </div>
                                 <!-- decrement button -->
                                 <div class="col">
-                                    <button class="btn btn-primary btn-sm">
+                                    <button (click)="decrementQuantity(item)" class="btn btn-primary btn-sm">
                                         <i class="fas fa-minus"></i>
                                     </button>
                                 </div>
@@ -42,7 +42,12 @@
                                 <div class="col-8"></div>
                             </div>
                         </div>
+                        
                         <p class="mt-2">Subtotal: {{item.quantity * item.unitPrice | currency : 'USD'}} </p>
+                        <!-- Remove button -->
+                        <div class="col">
+                        <button (click)="remove(item)" class="btn btn-primary btn-sm">Remove</button>
+                        </div>
                     </td>
                 </tr>
 
