@@ -46,7 +46,7 @@
                         <p class="mt-2">Subtotal: {{item.quantity * item.unitPrice | currency : 'USD'}} </p>
                         <!-- Remove button -->
                         <div class="col">
-                        <button (click)="remove(item)" class="btn btn-primary btn-sm">Remove</button>
+                        <button (click)="remove(item)" class="btn btn-danger btn-sm">Remove</button>
                         </div>
                     </td>
                 </tr>
@@ -57,6 +57,9 @@
                         <p>Total Quantity: {{totalQuantity}} </p>
                         <p>Shipping: {{1.99 | currency : 'USD'}}</p>
                         <p>Total Price: {{totalPrice + 1.99 | currency : 'USD'}}</p>
+                        <div class="col">
+                            <a routerLink="/checkout" class="btn btn-primary">Checkout</a>
+                        </div>            
                     </td>
                 </tr>
             </table>
