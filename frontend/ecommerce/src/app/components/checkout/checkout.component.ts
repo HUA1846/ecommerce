@@ -49,4 +49,7 @@ export class CheckoutComponent implements OnInit {
     console.log(this.checkoutFormGroup.get('customer').value.email);
   }
   
+  copyAddressToBilling(event) {
+
+  }
 }
