@@ -195,6 +195,13 @@
                         </div>
                     </div>
                 </div>
+                <!-- Order Details -->
+                <div>
+                    <h3>Review Your Order</h3>
+                    <p>Total Quantity: {{totalQuantity}}</p>
+                    <p>Shipping: {{1.99 | currency:'USD'}}</p>
+                    <p>Total Price: {{totalPrice + 1.99 | currency: 'USD'}}</p>
+                </div>
                 <!-- submit button -->
                 <div class="text-center">
                     <button type="submit" class="btn btn-info">Purchase</button>
