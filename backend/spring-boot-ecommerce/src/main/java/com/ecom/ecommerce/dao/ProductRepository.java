@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 // specify entity type(Product) and entity's primary key type (Long)
 // accept calls from web browser scripts from this origin
+// http://localhost:8080/api/products
 @CrossOrigin("http://localhost:4200")
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
