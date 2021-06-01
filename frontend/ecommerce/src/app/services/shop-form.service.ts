@@ -11,7 +11,7 @@ import { State } from '../common/state';
 export class ShopFormService {
 
   private contriesUrl = "http://localhost:8080/api/countries";
-  private statesUrl = "http://localhost:8080/api/states/";
+  private statesUrl = "http://localhost:8080/api/states";
   
   constructor(private httpClient: HttpClient) { }
 
