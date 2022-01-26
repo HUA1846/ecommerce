@@ -36,11 +36,11 @@ export class CheckoutComponent implements OnInit {
                                       Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
         }),
         shippingAddress: this.formBuilder.group({
-          street: [''],
-          city: [''],
-          state: [''],
-          country: [''],
-          zipCode: ['']
+          street: new FormControl('', [Validators.required, Validators.minLength(5), MyValidators.whiteSpaceOnly]),
+          city: new FormControl('', [Validators.required, Validators.minLength(2), MyValidators.whiteSpaceOnly]),
+          state: new FormControl('', [Validators.required]),
+          country: new FormControl('', [Validators.required]),
+          zipCode: new FormControl('', [Validators.required, Validators.pattern(/^(?:\d{5}(?:-\d{4})?)?$/)]),
         }),
         billingAddress: this.formBuilder.group({
           street: [''],
@@ -93,9 +93,15 @@ export class CheckoutComponent implements OnInit {
     console.log("The shipping address state is " + this.checkoutFormGroup.get('shippingAddress').value.state.name);
   }
   
+  // getter methods are for html templates to access the form control
   get firstName() { return this.checkoutFormGroup.get('customer.firstName'); }
   get lastName() { return this.checkoutFormGroup.get('customer.lastName'); }
   get email() { return this.checkoutFormGroup.get('customer.email'); }
+  get street() { return this.checkoutFormGroup.get('shippingAddress.street'); }
+  get city() { return this.checkoutFormGroup.get('shippingAddress.city'); }
+  get state() { return this.checkoutFormGroup.get('shippingAddress.state'); }
+  get country() { return this.checkoutFormGroup.get('shippingAddress.country'); }
+  get zipCode() { return this.checkoutFormGroup.get('shippingAddress.zipCode'); }
 
 
   copyAddressToBilling(event) {
