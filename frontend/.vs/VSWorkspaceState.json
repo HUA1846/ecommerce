@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\ecommerce",
+    "\\ecommerce\\src",
+    "\\ecommerce\\src\\app",
+    "\\ecommerce\\src\\app\\common",
+    "\\ecommerce\\src\\app\\components",
+    "\\ecommerce\\src\\app\\components\\cart-details"
+  ],
+  "SelectedNode": "\\ecommerce\\src\\app\\common\\cart-item.ts",
+  "PreviewInSolutionExplorer": false
+}
