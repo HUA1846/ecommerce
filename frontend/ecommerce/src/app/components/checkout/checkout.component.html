@@ -15,7 +15,7 @@
                                         <div *ngIf="firstName.errors.required">
                                             Firstname is required
                                         </div>
-                                        <div *ngIf="firstName.errors.minlength">
+                                        <div *ngIf="firstName.errors.minlength || firstName.errors.whiteSpaceOnly">
                                             Firstname must be at least two characters
                                         </div>
                                     </div>
@@ -31,7 +31,7 @@
                                     <div *ngIf="lastName.errors.required">
                                         Lastname is required
                                     </div>
-                                    <div *ngIf="firstName.errors.minlength">
+                                    <div *ngIf="lastName.errors.minlength || lastName.errors.whiteSpaceOnly">
                                         Lastname must be at least two characters
                                     </div>
                                 </div>
