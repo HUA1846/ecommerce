@@ -147,13 +147,21 @@
                     </label>
                 </div>
                 <!-- Billing address form group -->
-                <div formGroupName="shippingAddress" class="form-area">
+                <div formGroupName="billingAddress" class="form-area">
                     <h3>Billing Address</h3>
                     <div class="row">
                         <div class="col-md-2"><label>Street</label></div>
                         <div class="col-md-9">
                             <div class="input-space">
-                                <input formControlName="street" type="text"> 
+                                <input formControlName="street" type="text">
+                                    <div *ngIf="billingStreet.invalid && (billingStreet.dirty || billingStreet.touched)" class="alert-danger mt-1">
+                                        <div *ngIf="billingStreet.errors.required">
+                                            Street is required
+                                        </div>
+                                        <div *ngIf="billingStreet.errors.minlength || billingStreet.errors.whiteSpaceOnly">
+                                            Please enter a valid street name
+                                        </div>
+                                    </div>
                             </div>
                         </div>        
                     </div>
@@ -161,7 +169,15 @@
                         <div class="col-md-2"><label>City</label></div>
                         <div class="col-md-9">
                             <div class="input-space">
-                            <input formControlName="city" type="text"> 
+                            <input formControlName="city" type="text">
+                                <div *ngIf="billingCity.invalid && (billingCity.dirty || billingCity.touched)" class="alert-danger mt-1">
+                                    <div *ngIf="billingCity.errors.required">
+                                        Street is required
+                                    </div>
+                                    <div *ngIf="billingCity.errors.minlength || billingCity.errors.whiteSpaceOnly">
+                                        Please enter a valid city
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,6 +190,11 @@
                                         {{state.name}}
                                     </option>
                                 </select>
+                                    <div *ngIf='billingState.invalid && (billingState.dirty || billingState.touched)' class="alert-danger mt-1">
+                                        <div *ngIf='billingState.errors.required'>
+                                                state is required
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -186,6 +207,11 @@
                                     {{country.name}}
                                 </option>
                             </select>
+                                <div *ngIf='billingCountry.invalid && (billingCountry.dirty || billingCountry.touched)' class="alert-danger mt-1">
+                                    <div *ngIf='billingCountry.errors.required'>
+                                            country is required
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -193,7 +219,12 @@
                         <div class="col-md-2"><label>Zip Code</label></div>
                         <div class="col-md-9">
                             <div class="input-space">
-                            <input formControlName="zipCode" type="text"> 
+                            <input formControlName="zipCode" type="text">
+                                <div *ngIf='billingZipCode.invalid && (billingZipCode.dirty || billingZipCode.touched)' class="alert-danger mt-1">
+                                    <div *ngIf='billingZipCode.errors.pattern'>
+                                            Please enter a valid zipcode
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
