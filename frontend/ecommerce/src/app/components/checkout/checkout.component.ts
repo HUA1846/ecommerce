@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
+import { CartService } from 'src/app/services/cart.service';
 import { ShopFormService } from 'src/app/services/shop-form.service';
 import { MyValidators } from 'src/app/validators/my-validators';
 
@@ -23,7 +24,11 @@ export class CheckoutComponent implements OnInit {
   billingStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
-              private shopFormService: ShopFormService) { }
+              private shopFormService: ShopFormService,
+              private cartService: CartService) {
+                
+                this.listCheckoutDetails();
+              }
 
   ngOnInit(): void {
     const startMonth: number = new Date().getMonth() + 1;
@@ -111,6 +116,19 @@ export class CheckoutComponent implements OnInit {
   get nameOnCard() { return this.checkoutFormGroup.get('creditCard.nameOnCard')}
   get cardNumber() { return this.checkoutFormGroup.get('creditCard.cardNumber')}
   get securityCode() { return this.checkoutFormGroup.get('creditCard.securityCode')}
+
+  listCheckoutDetails() {
+    this.cartService.totalPrice.subscribe(
+      data => this.totalPrice = data
+    );
+
+    this.cartService.totalQuantity.subscribe(
+      data => this.totalQuantity = data
+    );
+
+  }
+  
+
 
   copyAddressToBilling(event) {
     if(event.target.checked) {
