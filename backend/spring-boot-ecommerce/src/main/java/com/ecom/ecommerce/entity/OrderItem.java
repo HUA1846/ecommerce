@@ -26,11 +26,10 @@ public class OrderItem {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-//    @Column(name = "order_id")
-//    private Long orderId;
-
     @Column(name = "product_id")
     private Long productId;
 
+    @ManyToOne
+    @Column(name = "order_id")
     private Order order;
 }
