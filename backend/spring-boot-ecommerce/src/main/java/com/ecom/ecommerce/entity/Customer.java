@@ -19,10 +19,10 @@ public class Customer {
     private Long id;
 
     @Column(name="first_name")
-    private String firstname;
+    private String firstName; // has to match JSON fields
 
     @Column(name="last_name")
-    private String lastname;
+    private String lastName;
 
     @Column(name="email")
     private String email;
