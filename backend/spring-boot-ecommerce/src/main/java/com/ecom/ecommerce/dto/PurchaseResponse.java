@@ -6,7 +6,7 @@ import lombok.NonNull;
 @Data
 public class PurchaseResponse {
 
-    // has to be final field for lombok gette to work
+    // has to be final field for lombok getter to work
     // or add @NonNull
     @NonNull
     private String orderTrackingNumber;

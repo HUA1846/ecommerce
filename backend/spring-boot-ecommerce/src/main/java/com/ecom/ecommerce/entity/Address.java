@@ -2,12 +2,9 @@ package com.ecom.ecommerce.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Date;
+
 
 @Entity
 @Table(name="address")
@@ -34,7 +31,7 @@ public class Address {
     @Column(name = "zip_code")
     private String zipcode;
 
-    @OneToMany
+    @OneToOne
     @PrimaryKeyJoinColumn
     private Order order;
 }

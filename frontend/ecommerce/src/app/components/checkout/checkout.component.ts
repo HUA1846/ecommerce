@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Country } from 'src/app/common/country';
+import { Order } from 'src/app/common/order';
+import { OrderItem } from 'src/app/common/order-item';
+import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
 import { ShopFormService } from 'src/app/services/shop-form.service';
 import { MyValidators } from 'src/app/validators/my-validators';
 
@@ -25,12 +30,13 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private shopFormService: ShopFormService,
-              private cartService: CartService) {
-                
-                this.listCheckoutDetails();
-              }
+              private cartService: CartService,
+              private checkoutService: CheckoutService,
+              private router: Router) {}
 
   ngOnInit(): void {
+    this.listCheckoutDetails();
+
     const startMonth: number = new Date().getMonth() + 1;
 
     this.checkoutFormGroup = this.formBuilder.group({
@@ -86,16 +92,71 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("Handling the submit button");
 
     // Form validation. Touching all groups triiggers the display of error messages for all
     if(this.checkoutFormGroup.invalid) {
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
 
-    console.log(this.checkoutFormGroup.get('customer').value.email);
-    console.log("The shipping address country is " + this.checkoutFormGroup.get('shippingAddress').value.country.name);
-    console.log("The shipping address state is " + this.checkoutFormGroup.get('shippingAddress').value.state.name);
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    // get cartItems from cartService
+    // add cartItems to Order (orderItems)
+    const cartItems = this.cartService.cartItems;
+    let orderItems: OrderItem[] = cartItems.map(cartItem => new OrderItem(cartItem));
+
+    // get all fields that purchase required:
+    // customer, shipping/billing address, order, orderitems
+    let purchase = new Purchase();
+
+    // Purchase - address
+    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+    purchase.shippingAddress.state = shippingState.name;
+    purchase.shippingAddress.country = shippingCountry.name;
+    console.log(purchase.shippingAddress.state);
+
+    purchase.billingAddress = this.checkoutFormGroup.controls['billingAddress'].value;
+    const billingState = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+    const billingCountry = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+    purchase.billingAddress.state = billingState.name;
+    purchase.billingAddress.country = billingCountry.name;
+    
+    // Purchase - Customer
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+
+    // Purchase - Order
+    purchase.order = order;
+
+    // Purchase - OrderItems
+    purchase.orderItems = orderItems;
+
+    // call REST api via the checkoutService
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: response => {
+        alert(`We received your order.\nYour order tracking number is\n ${response.orderTrackingNumber}`);
+        this.resetCart();
+      },
+      error: err => {
+        alert(`Something went wrong. We can't process your order. Error: ${err.message}`)
+      }
+    });
+  }
+  resetCart() {
+    // reset cartService
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+
+    // reset the checkout form
+    this.checkoutFormGroup.reset();
+
+    // navigate back to product page
+    this.router.navigateByUrl('/products');
   }
   
   // getter methods are for html templates to access the form control
@@ -127,7 +188,6 @@ export class CheckoutComponent implements OnInit {
     );
 
   }
-  
 
 
   copyAddressToBilling(event) {
