@@ -16,6 +16,7 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { LoginStatusComponent } from './components/login-status/login-status.component';
+import { MembersPageComponent } from './components/members-page/members-page.component';
 
 import { OktaAuth } from '@okta/okta-auth-js';
 import {
@@ -26,7 +27,7 @@ import {
 } from '@okta/okta-angular';
 
 import appConfig from './config/app-config';
-import { MembersPageComponent } from './components/members-page/members-page.component';
+
 
 const oktaConfig = Object.assign({
   onAuthRequired: (oktaAuth, injector) => {
