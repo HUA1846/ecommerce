@@ -1,5 +1,6 @@
 package com.ecom.ecommerce.service;
 
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import com.ecom.ecommerce.dao.CustomerRepository;
 import com.ecom.ecommerce.dto.Purchase;
 import com.ecom.ecommerce.dto.PurchaseResponse;
@@ -44,12 +45,20 @@ public class CheckoutServiceImpl implements CheckoutService{
         order.setShippingAddress(purchase.getShippingAddress());
         order.setBillingAddress(purchase.getBillingAddress());
 
-        // populate customer with order
+        // populate customer with order and check if
+        // the customer exists based on the email
+        // if exists, assign it to the customer variable
         Customer customer = purchase.getCustomer();
+        String email = customer.getEmail();
+        Customer customerByEmail = customerRepository.findByEmail(email);
+
+        if(customerByEmail != null) {
+            customer = customerByEmail;
+        }
+
         customer.add(order);
 
         // save to the database
-
         customerRepository.save(customer);
 
         return new PurchaseResponse(orderTrackingNumber);
